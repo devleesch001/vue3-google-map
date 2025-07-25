@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.23.1](https://github.com/inocan-group/vue3-google-maps/compare/v0.23.0...v0.23.1) (2025-07-25)
+
+
+### Bug Fixes
+
+* **AdvancedMarker:** resolve race condition with slot content rendering ([4c20cce](https://github.com/inocan-group/vue3-google-maps/commit/4c20cceb7b5b8f2cc3e53e47042f6c3aa66daee0)), closes [#322](https://github.com/inocan-group/vue3-google-maps/issues/322)
+* **CustomControl:** ensure control index is set correctly ([7ae74fc](https://github.com/inocan-group/vue3-google-maps/commit/7ae74fce615ef57a6f2ff39ad5c485a9212247ec))
+
+### [0.23.0](https://github.com/inocan-group/vue3-google-maps/compare/v0.22.0...v0.23.0) (2025-07-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* **AdvancedMarker:** Custom content now requires explicit `#content` slot instead of default slot. If you were using custom HTML content in AdvancedMarker in v0.22.0, wrap it in `<template #content>`. InfoWindow components are unaffected and continue using the default slot.
+
+
+### Features
+
+* **AdvancedMarker:** content slot for custom content ([db0515f](https://github.com/inocan-group/vue3-google-maps/commit/db0515f94fec6ebf0133f29c74ce2c79dfbc6020))
+
+
+### Bug Fixes
+
+* **HeatmapLayer:** support reactive data updates ([52816cf](https://github.com/inocan-group/vue3-google-maps/commit/52816cfc6875f187abed92efccbe1e418b402afa)), closes [#318](https://github.com/inocan-group/vue3-google-maps/issues/318) [#269](https://github.com/inocan-group/vue3-google-maps/issues/269)
+
 ### [0.22.0](https://github.com/inocan-group/vue3-google-maps/compare/v0.21.1...v0.22.0) (2025-04-28)
 
 

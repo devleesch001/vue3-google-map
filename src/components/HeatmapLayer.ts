@@ -8,6 +8,11 @@ interface ExtendedHeatmapLayerOptions extends Omit<HeatmapLayerOptions, "data"> 
   data: HeatmapLayerOptions["data"] | (google.maps.LatLngLiteral | { location: google.maps.LatLngLiteral })[];
 }
 
+/**
+ * @deprecated The HeatmapLayer component was deprecated on May 27, 2025 and will be sunset in May 2026.
+ * Google recommends migrating to third-party library integrations like deck.gl, which offers a HeatmapLayer implementation.
+ * @see {@link https://developers.google.com/maps/deprecations} for more information.
+ */
 export default defineComponent({
   name: "HeatmapLayer",
   props: {
@@ -27,12 +32,12 @@ export default defineComponent({
         const hasChanged = !equal(options, oldOptions) || map.value !== oldMap;
 
         if (map.value && api.value && hasChanged) {
-          const opts: ExtendedHeatmapLayerOptions = structuredClone(options);
+          let opts: HeatmapLayerOptions;
 
-          if (opts.data && !(opts.data instanceof api.value.MVCArray)) {
+          if (options.data && !(options.data instanceof api.value.MVCArray)) {
             const LatLng = api.value.LatLng;
 
-            opts.data = opts.data?.map((point) => {
+            const transformedData = options.data.map((point) => {
               if (
                 point instanceof LatLng ||
                 ("location" in point && (point.location instanceof LatLng || point.location === null))
@@ -46,16 +51,25 @@ export default defineComponent({
                 return new LatLng(point);
               }
             }) as HeatmapLayerOptions["data"];
+
+            // Create new options object with transformed data
+            opts = {
+              ...options,
+              data: transformedData,
+            };
+          } else {
+            // Use options as-is when no transformation needed
+            opts = options as HeatmapLayerOptions;
           }
 
           if (heatmapLayer.value) {
-            heatmapLayer.value.setOptions(opts as HeatmapLayerOptions);
+            heatmapLayer.value.setOptions(opts);
           } else {
             heatmapLayer.value = markRaw(
               new api.value.visualization.HeatmapLayer({
                 ...opts,
                 map: map.value,
-              } as HeatmapLayerOptions)
+              })
             );
           }
         }

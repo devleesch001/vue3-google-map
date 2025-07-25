@@ -1,8 +1,12 @@
-import { defineComponent, PropType, toRef, provide } from "vue";
+import { defineComponent, PropType, toRef, provide, Ref } from "vue";
 import { useSetupMapComponent } from "../composables/index";
 import { markerSymbol } from "../shared/index";
 
-const markerEvents = [
+export interface IMarkerExposed {
+  marker: Ref<google.maps.Marker | undefined>;
+}
+
+export const markerEvents = [
   "animation_changed",
   "click",
   "dblclick",
@@ -19,7 +23,6 @@ const markerEvents = [
   "contextmenu",
   "cursor_changed",
   "flat_changed",
-  "rightclick",
   "zindex_changed",
   "icon_changed",
   "position_changed",
@@ -28,6 +31,12 @@ const markerEvents = [
   "visible_changed",
 ];
 
+/**
+ * @deprecated The Marker component is deprecated as of February 2024. Use AdvancedMarker instead.
+ * The google.maps.Marker API is deprecated and will be removed in a future version.
+ * Migrate to AdvancedMarker for the latest features and better performance.
+ * @see {@link https://developers.google.com/maps/deprecations} for more information.
+ */
 export default defineComponent({
   name: "Marker",
   props: {

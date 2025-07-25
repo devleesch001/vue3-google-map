@@ -20,11 +20,16 @@ import {
   ref,
   watch,
   Comment,
+  type Ref,
 } from "vue";
 import { markerSymbol, apiSymbol, mapSymbol, markerClusterSymbol } from "../shared/index";
 import equal from "fast-deep-equal";
 
-const markerEvents = ["click", "drag", "dragend", "dragstart", "gmp-click"];
+export interface IAdvancedMarkerExposed {
+  marker: Ref<google.maps.marker.AdvancedMarkerElement | undefined>;
+}
+
+export const markerEvents = ["click", "drag", "dragend", "dragstart", "gmp-click"];
 
 export default defineComponent({
   name: "AdvancedMarker",
@@ -57,12 +62,16 @@ export default defineComponent({
     );
 
     watch(
-      [map, options, pinOptions],
-      async (_, [oldMap, oldOptions, oldPinOptions]) => {
+      [map, options, pinOptions, markerRef],
+      async (_, [oldMap, oldOptions, oldPinOptions, oldMarkerRef]) => {
         const hasOptionChange = !equal(options.value, oldOptions) || !equal(pinOptions.value, oldPinOptions);
-        const hasChanged = hasOptionChange || map.value !== oldMap;
+        const hasMarkerRefChange = markerRef.value !== oldMarkerRef;
+        const hasChanged = hasOptionChange || hasMarkerRefChange || map.value !== oldMap;
 
         if (!map.value || !api.value || !hasChanged) return;
+
+        // If we need custom slot content but markerRef isn't available yet, wait for it
+        if (hasCustomSlotContent.value && !markerRef.value) return;
 
         const { AdvancedMarkerElement, PinElement } = api.value.marker;
 
@@ -104,6 +113,7 @@ export default defineComponent({
       },
       {
         immediate: true,
+        flush: "post", // Ensure DOM updates happen before this watcher runs
       }
     );
 
